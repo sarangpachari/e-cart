@@ -4,10 +4,24 @@ import { IoHeartDislikeOutline } from "react-icons/io5";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { removeItem } from "../redux/slices/wishlistSlice";
+import { addToCart } from "../redux/slices/cartSlice";
+
 
 const Wishlist = () => {
+  const userCart = useSelector(state=>state.cartReducer)
   const dispatch = useDispatch()
   const userWishlist = useSelector((state) => state.wishlistReducer);
+
+  const handleCart = (product)=>{
+    dispatch(removeItem(product.id))
+    dispatch(addToCart(product))
+    const existingProduct = userCart?.find(item=>item?.id == product.id)
+    if (existingProduct) {
+      alert("Product Quantity Incrementing")
+    } else {
+      alert("Added to Cart")
+    }
+  }
 
   return (
     <>
@@ -32,7 +46,7 @@ const Wishlist = () => {
                       <button onClick={()=>dispatch(removeItem(item?.id))}>
                         <IoHeartDislikeOutline className="text-2xl" />
                       </button>
-                      <button>
+                      <button onClick={()=>handleCart(item)}>
                         <FaCartPlus className="text-2xl text-green-600" />
                       </button>
                     </div>
@@ -40,9 +54,9 @@ const Wishlist = () => {
                 </div>
               ))
             ) : (
-              <div className="">
-                <h1>Your Wishlist is Empty !</h1>
-              </div>
+              <div className="text-center mt-5 w-96">
+            <h3 className="text-2xl text-slate-800">Your Wishlist is Empty</h3>
+          </div>
             )}
           </div>
         </>

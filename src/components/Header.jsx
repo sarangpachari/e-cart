@@ -1,11 +1,13 @@
 import React from "react";
 import { FaCartPlus, FaHeart } from "react-icons/fa";
 import { FaTruckFast } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { searchProduct } from "../redux/slices/productSlice";
 
 const Header = ({ insideHome }) => {
-
+  const dispatch = useDispatch()
+  const userCart = useSelector(state=>state.cartReducer)
   const userWishlist = useSelector((state) => state.wishlistReducer);
 
   return (
@@ -18,6 +20,7 @@ const Header = ({ insideHome }) => {
         {insideHome && (
           <li className="list-none inline-flex px-5">
             <input
+              onChange={e=>dispatch(searchProduct(e.target.value.toLowerCase()))}
               className="w-96 rounded p-2 bg-slate-100 shadow-md"
               type="text"
               placeholder="Search Products Here"
@@ -39,7 +42,7 @@ const Header = ({ insideHome }) => {
             <FaCartPlus className="text-slate-800" />
             Cart{" "}
             <span className="text-white bg-teal-950 rounded p-1 text-xs">
-              10
+              {userCart?.length}
             </span>
           </li>
         </Link>

@@ -4,8 +4,10 @@ import { FaCartPlus, FaHeart, FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../redux/slices/wishlistSlice";
+import { addToCart } from "../redux/slices/cartSlice";
 
 const View = () => {
+  const userCart = useSelector(state=>state.cartReducer)
   const dispatch = useDispatch();
   const userWishlist = useSelector((state) => state.wishlistReducer);
   const [product, setProduct] = useState({});
@@ -27,6 +29,17 @@ const View = () => {
       dispatch(addToWishlist(product));
     }
   };
+
+
+  const handleCart = ()=>{
+    dispatch(addToCart(product))
+    const existingProduct = userCart.find(item=>item?.id == id)
+    if (existingProduct) {
+      alert("Product Quantity Incrementing")
+    } else {
+      alert("Added to Cart")
+    }
+  }
 
   return (
     <>
@@ -82,7 +95,7 @@ const View = () => {
               </button>
 
               {/* ADD TO CART BUTTON */}
-              <button className="bg-green-200 hover:bg-red-200 px-4 py-2 flex items-center gap-2">
+              <button onClick={handleCart} className="bg-green-200 hover:bg-red-200 px-4 py-2 flex items-center gap-2">
                 <FaCartPlus />
                 Add to Cart
               </button>
